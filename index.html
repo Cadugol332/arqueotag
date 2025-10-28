@@ -761,6 +761,74 @@
             opacity: 1;
         }
         
+        /* Modal de permissão de câmera */
+        .permission-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .permission-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .permission-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            width: 85%;
+            max-width: 350px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--primary);
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+        
+        .permission-modal.show .permission-content {
+            transform: translateY(0);
+        }
+        
+        .permission-icon {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .permission-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .permission-text {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .permission-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .permission-actions .btn {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
         /* Scrollbar personalizada */
         ::-webkit-scrollbar {
             width: 8px;
@@ -1099,6 +1167,24 @@
             
             <!-- Toast Notification -->
             <div class="toast" id="toast"></div>
+            
+            <!-- Modal de Permissão de Câmera -->
+            <div class="permission-modal" id="permission-modal">
+                <div class="permission-content">
+                    <div class="permission-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <div class="permission-title">Permissão de Câmera</div>
+                    <div class="permission-text">
+                        O ArcheoCatalog precisa acessar sua câmera para escanear QR Codes de artefatos arqueológicos. 
+                        Sua privacidade é importante - a câmera só será usada para esta finalidade.
+                    </div>
+                    <div class="permission-actions">
+                        <button class="btn btn-secondary" id="permission-cancel">Cancelar</button>
+                        <button class="btn btn-primary" id="permission-allow">Permitir</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1194,6 +1280,11 @@
         const autoSyncToggle = document.getElementById('auto-sync-toggle');
         const changePasswordBtn = document.getElementById('change-password-btn');
         const privacyBtn = document.getElementById('privacy-btn');
+        
+        // Elementos do modal de permissão
+        const permissionModal = document.getElementById('permission-modal');
+        const permissionAllow = document.getElementById('permission-allow');
+        const permissionCancel = document.getElementById('permission-cancel');
 
         // Variáveis da câmera
         let stream = null;
@@ -1223,8 +1314,32 @@
         });
 
         // Funções da câmera
+        function showPermissionModal() {
+            permissionModal.classList.add('show');
+        }
+
+        function hidePermissionModal() {
+            permissionModal.classList.remove('show');
+        }
+
         async function startCamera() {
             try {
+                // Mostrar modal de permissão primeiro
+                showPermissionModal();
+                
+                // Aguardar decisão do usuário
+                const userDecision = await new Promise((resolve) => {
+                    permissionAllow.onclick = () => resolve(true);
+                    permissionCancel.onclick = () => resolve(false);
+                });
+                
+                hidePermissionModal();
+                
+                if (!userDecision) {
+                    showToast('Permissão de câmera negada', 'error');
+                    return;
+                }
+                
                 // Solicitar acesso à câmera
                 stream = await navigator.mediaDevices.getUserMedia({ 
                     video: { 
@@ -1251,7 +1366,19 @@
                 showToast('Câmera ativada com sucesso!');
             } catch (error) {
                 console.error('Erro ao acessar a câmera:', error);
-                showToast('Erro ao acessar a câmera. Verifique as permissões.', 'error');
+                
+                // Tratamento específico de erros de permissão
+                if (error.name === 'NotAllowedError') {
+                    showToast('Permissão de câmera negada. Verifique as configurações do navegador.', 'error');
+                } else if (error.name === 'NotFoundError') {
+                    showToast('Nenhuma câmera encontrada no dispositivo.', 'error');
+                } else if (error.name === 'NotSupportedError') {
+                    showToast('O navegador não suporta acesso à câmera.', 'error');
+                } else if (error.name === 'NotReadableError') {
+                    showToast('A câmera está sendo usada por outro aplicativo.', 'error');
+                } else {
+                    showToast('Erro ao acessar a câmera. Verifique as permissões.', 'error');
+                }
             }
         }
 
