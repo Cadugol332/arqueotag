@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ArcheoCatalog - IPHAN</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            --primary: #c19a6b;
+            --secondary: #7e6047;
+            --accent: #8c7853;
+            --light: #f5f1e8;
+            --dark: #3c2f2f;
+            --text: #4a3c31;
+            --success: #5d8c5a;
+            --warning: #b8945f;
+            --danger: #a05252;
+            --shadow: rgba(60, 47, 47, 0.2);
+            --card-bg: #ffffff;
+            --app-bg: #f5f1e8;
+            --header-bg: #3c2f2f;
+            --status-bg: #3c2f2f;
+        }
+        
+        /* Tema Escuro */
+        .dark-theme {
+            --primary: #d4b896;
+            --secondary: #a88c70;
+            --accent: #b8a788;
+            --light: #2a2a2a;
+            --dark: #e0e0e0;
+            --text: #e0e0e0;
+            --success: #6da769;
+            --warning: #d4a96a;
+            --danger: #c66;
+            --shadow: rgba(0, 0, 0, 0.4);
+            --card-bg: #3a3a3a;
+            --app-bg: #2a2a2a;
+            --header-bg: #1a1a1a;
+            --status-bg: #1a1a1a;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #7e6047 0%, #3c2f2f 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        .mobile-container {
+            width: 100%;
+            max-width: 420px;
+            margin: 0 auto;
+            background: var(--app-bg);
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23c19a6b' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            transition: background 0.3s;
+        }
+        
+        .dark-theme .mobile-container {
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d4b896' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        /* Tela de Autenticação */
+        .auth-screen {
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .auth-logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .auth-logo i {
+            margin-right: 10px;
+            color: var(--primary);
+            font-size: 32px;
+        }
+        
+        .auth-subtitle {
+            color: var(--secondary);
+            font-size: 16px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .auth-form {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px var(--shadow);
+            border: 1px solid var(--primary);
+            margin-bottom: 20px;
+            transition: background 0.3s;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--primary);
+        }
+        
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--secondary);
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .auth-tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        .auth-content {
+            display: none;
+        }
+        
+        .auth-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            font-size: 16px;
+            background: var(--light);
+            transition: all 0.3s;
+            box-shadow: inset 0 2px 4px var(--shadow);
+            color: var(--text);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 2px rgba(193, 154, 107, 0.3), inset 0 2px 4px var(--shadow);
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 8px var(--shadow);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: var(--dark);
+        }
+        
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+            border: 1px solid var(--primary);
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--secondary);
+        }
+        
+        .auth-link {
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        
+        /* Conteúdo principal do app (oculto inicialmente) */
+        .app-content {
+            display: none;
+        }
+        
+        .status-bar {
+            background: var(--status-bg);
+            color: var(--light);
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            border-bottom: 2px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+            transition: background 0.3s;
+        }
+        
+        .status-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+        
+        .app-header {
+            background: var(--header-bg);
+            color: var(--light);
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid var(--primary);
+            box-shadow: 0 4px 12px var(--shadow);
+            transition: background 0.3s;
+        }
+        
+        .app-header h1 {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .app-header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 10%;
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+        
+        .back-button {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            background: var(--primary);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        
+        .back-button:hover {
+            background: var(--secondary);
+            transform: translateY(-50%) scale(1.05);
+        }
+        
+        .content {
+            padding: 20px;
+            overflow-y: auto;
+            max-height: calc(100vh - 150px);
+        }
+        
+        .section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--primary);
+            position: relative;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            color: var(--primary);
+            background: var(--dark);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        .camera-view {
+            background: var(--dark);
+            height: 250px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--light);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--primary);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+        
+        .camera-view::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(193, 154, 107, 0.1), transparent 30%, transparent 70%, rgba(193, 154, 107, 0.1));
+            z-index: 1;
+        }
+        
+        .camera-view i {
+            font-size: 64px;
+            margin-bottom: 15px;
+            z-index: 2;
+            color: var(--primary);
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        .scanner-overlay {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            z-index: 2;
+            box-shadow: 0 0 0 1000px rgba(60, 47, 47, 0.7);
+        }
+        
+        .scanner-line {
+            position: absolute;
+            height: 2px;
+            width: 180px;
+            background: var(--primary);
+            top: 50%;
+            animation: scan 2s infinite ease-in-out;
+            z-index: 3;
+            box-shadow: 0 0 10px var(--primary);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .artifact-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .artifact-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+        
+        .artifact-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+        
+        .artifact-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+        
+        .artifact-details {
+            color: var(--secondary);
+            font-size: 14px;
+        }
+        
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .photo-item {
+            height: 100px;
+            border-radius: 8px;
+            background: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light);
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid var(--primary);
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .photo-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 10px var(--shadow);
+        }
+        
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        #add-photo {
+            background: var(--dark);
+            color: var(--primary);
+            font-size: 24px;
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            background: var(--header-bg);
+            border-top: 2px solid var(--primary);
+            z-index: 100;
+            box-shadow: 0 -5px 15px var(--shadow);
+            transition: background 0.3s;
+        }
+        
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            color: var(--light);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+        
+        .nav-item.active::before {
+            transform: scaleX(1);
+        }
+        
+        .nav-item i {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .sync-status {
+            padding: 10px 15px;
+            background: var(--warning);
+            color: var(--dark);
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            border-top: 1px solid rgba(60, 47, 47, 0.1);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Tela de Perfil */
+        .profile-header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: var(--dark);
+            font-size: 32px;
+        }
+        
+        .profile-name {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .profile-email {
+            color: var(--secondary);
+            font-size: 14px;
+        }
+        
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 3px 8px var(--shadow);
+            transition: background 0.3s;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--secondary);
+        }
+        
+        .settings-option {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(193, 154, 107, 0.2);
+        }
+        
+        .settings-option:last-child {
+            border-bottom: none;
+        }
+        
+        .settings-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(193, 154, 107, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--primary);
+        }
+        
+        .settings-content {
+            flex: 1;
+        }
+        
+        .settings-title {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+        
+        .settings-desc {
+            font-size: 12px;
+            color: var(--secondary);
+        }
+        
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .theme-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--secondary);
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .theme-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .theme-slider {
+            background-color: var(--primary);
+        }
+        
+        input:checked + .theme-slider:before {
+            transform: translateX(26px);
+        }
+        
+        /* Animações */
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        @keyframes scan {
+            0% { top: 20%; }
+            50% { top: 80%; }
+            100% { top: 20%; }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark);
+            color: var(--light);
+            padding: 12px 20px;
+            border-radius: 8px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 5px 15px var(--shadow);
+            border: 1px solid var(--primary);
+            max-width: 80%;
+            text-align: center;
+        }
+        
+        .toast.show {
+            opacity: 1;
+        }
+        
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--light);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Tela de Autenticação -->
+        <div class="auth-screen" id="auth-screen">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <i class="fas fa-monument"></i>
+                    ArcheoCatalog
+                </div>
+                <p class="auth-subtitle">Sistema de catalogação para empresas de arqueologia</p>
+            </div>
+            
+            <div class="auth-form">
+                <div class="auth-tabs">
+                    <div class="auth-tab active" data-tab="login">Login</div>
+                    <div class="auth-tab" data-tab="register">Registrar</div>
+                </div>
+                
+                <!-- Formulário de Login -->
+                <div class="auth-content active" id="login-content">
+                    <div class="form-group">
+                        <label for="login-email">E-mail da Empresa</label>
+                        <input type="email" class="form-control" id="login-email" placeholder="empresa@exemplo.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="login-password">Senha</label>
+                        <input type="password" class="form-control" id="login-password" placeholder="Sua senha">
+                    </div>
+                    
+                    <button class="btn btn-primary" id="login-btn">
+                        <i class="fas fa-sign-in-alt"></i> Entrar no Sistema
+                    </button>
+                    
+                    <div class="auth-footer">
+                        <p>Não tem uma conta? <span class="auth-link" id="go-to-register">Registre sua empresa</span></p>
+                    </div>
+                </div>
+                
+                <!-- Formulário de Registro -->
+                <div class="auth-content" id="register-content">
+                    <div class="form-group">
+                        <label for="register-company">Nome da Empresa</label>
+                        <input type="text" class="form-control" id="register-company" placeholder="Ex: Arqueologia Brasil Ltda">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-cnpj">CNPJ</label>
+                        <input type="text" class="form-control" id="register-cnpj" placeholder="00.000.000/0000-00">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-email">E-mail</label>
+                        <input type="email" class="form-control" id="register-email" placeholder="empresa@exemplo.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-password">Senha</label>
+                        <input type="password" class="form-control" id="register-password" placeholder="Mínimo 8 caracteres">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-confirm">Confirmar Senha</label>
+                        <input type="password" class="form-control" id="register-confirm" placeholder="Digite novamente sua senha">
+                    </div>
+                    
+                    <button class="btn btn-primary" id="register-btn">
+                        <i class="fas fa-user-plus"></i> Registrar Empresa
+                    </button>
+                    
+                    <div class="auth-footer">
+                        <p>Já tem uma conta? <span class="auth-link" id="go-to-login">Faça login</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="auth-footer">
+                <p><small>Sistema oficial do IPHAN para empresas de arqueologia credenciadas</small></p>
+            </div>
+        </div>
+        
+        <!-- Conteúdo Principal do App (inicialmente oculto) -->
+        <div class="app-content" id="app-content">
+            <div class="status-bar">
+                <span id="current-time">9:41</span>
+                <span>IPHAN</span>
+                <span><i class="fas fa-battery-full"></i> <span id="battery-level">100%</span></span>
+            </div>
+            
+            <div class="app-header">
+                <div class="back-button" id="back-button"><i class="fas fa-arrow-left"></i></div>
+                <h1 id="current-screen-title">ArcheoCatalog</h1>
+            </div>
+            
+            <div class="content">
+                <!-- Tela do Scanner -->
+                <div id="scanner-tab">
+                    <div class="section">
+                        <div class="section-title"><i class="fas fa-qrcode"></i> Leitor de QR Code</div>
+                        <div class="camera-view">
+                            <i class="fas fa-camera"></i>
+                            <p>Posicione o QR Code do artefato</p>
+                            <div class="scanner-overlay"></div>
+                            <div class="scanner-line"></div>
+                        </div>
+                        <button class="btn btn-primary" id="scan-btn"><i class="fas fa-camera"></i> Ativar Câmera</button>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title"><i class="fas fa-history"></i> Recentes</div>
+                        <div class="artifact-card" data-artifact="1">
+                            <div class="artifact-name">Vaso Cerâmico Tupi</div>
+                            <div class="artifact-details">Sítio: Pedra Branca • Data: 12/05/2023</div>
+                        </div>
+                        <div class="artifact-card" data-artifact="2">
+                            <div class="artifact-name">Lâmina de Pedra</div>
+                            <div class="artifact-details">Sítio: Serra Negra • Data: 08/05/2023</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tela de Catalogação -->
+                <div id="catalog-tab" class="hidden">
+                    <div class="section">
+                        <div class="section-title"><i class="fas fa-edit"></i> Ficha Catalográfica</div>
+                        
+                        <div class="form-group">
+                            <label for="artifact-name">Nome do Artefato</label>
+                            <input type="text" class="form-control" id="artifact-name" placeholder="Ex: Vaso Cerâmico Tupi">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="artifact-code">Código do Artefato</label>
+                            <input type="text" class="form-control" id="artifact-code" value="AC-2023-0012" readonly>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="artifact-site">Sítio Arqueológico</label>
+                            <input type="text" class="form-control" id="artifact-site" placeholder="Ex: Pedra Branca">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="artifact-material">Material</label>
+                            <select class="form-control" id="artifact-material">
+                                <option value="">Selecione o material</option>
+                                <option value="ceramica">Cerâmica</option>
+                                <option value="pedra">Pedra</option>
+                                <option value="osso">Osso</option>
+                                <option value="metal">Metal</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="artifact-desc">Descrição</label>
+                            <textarea class="form-control" id="artifact-desc" rows="3" placeholder="Descrição detalhada do artefato..."></textarea>
+                        </div>
+                        
+                        <button class="btn btn-success" id="save-btn"><i class="fas fa-save"></i> Salvar Ficha</button>
+                    </div>
+                </div>
+                
+                <!-- Tela de Artefatos -->
+                <div id="artifacts-tab" class="hidden">
+                    <div class="section">
+                        <div class="section-title"><i class="fas fa-archive"></i> Todos os Artefatos</div>
+                        
+                        <div class="artifact-card" data-artifact="1">
+                            <div class="artifact-name">Vaso Cerâmico Tupi</div>
+                            <div class="artifact-details">Sítio: Pedra Branca • Data: 12/05/2023</div>
+                        </div>
+                        <div class="artifact-card" data-artifact="2">
+                            <div class="artifact-name">Lâmina de Pedra</div>
+                            <div class="artifact-details">Sítio: Serra Negra • Data: 08/05/2023</div>
+                        </div>
+                        <div class="artifact-card" data-artifact="3">
+                            <div class="artifact-name">Ponta de Flecha</div>
+                            <div class="artifact-details">Sítio: Vale das Pedras • Data: 15/04/2023</div>
+                        </div>
+                        <div class="artifact-card" data-artifact="4">
+                            <div class="artifact-name">Conta de Colar</div>
+                            <div class="artifact-details">Sítio: Serra Azul • Data: 22/03/2023</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tela de Perfil -->
+                <div id="profile-tab" class="hidden">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="profile-name" id="profile-company-name">Empresa Arqueológica</div>
+                        <div class="profile-email" id="profile-company-email">empresa@exemplo.com</div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title"><i class="fas fa-chart-bar"></i> Estatísticas</div>
+                        
+                        <div class="profile-stats">
+                            <div class="stat-card">
+                                <div class="stat-value" id="artifacts-count">12</div>
+                                <div class="stat-label">Artefatos</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="sites-count">5</div>
+                                <div class="stat-label">Sítios</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="sync-count">3</div>
+                                <div class="stat-label">Pendentes</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title"><i class="fas fa-cogs"></i> Configurações</div>
+                        
+                        <div class="settings-option">
+                            <div class="settings-icon">
+                                <i class="fas fa-palette"></i>
+                            </div>
+                            <div class="settings-content">
+                                <div class="settings-title">Tema do App</div>
+                                <div class="settings-desc">Altere entre modo claro e escuro</div>
+                            </div>
+                            <label class="theme-switch">
+                                <input type="checkbox" id="theme-toggle">
+                                <span class="theme-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="settings-option">
+                            <div class="settings-icon">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <div class="settings-content">
+                                <div class="settings-title">Notificações</div>
+                                <div class="settings-desc">Receba alertas sobre sincronização</div>
+                            </div>
+                            <label class="theme-switch">
+                                <input type="checkbox" id="notifications-toggle" checked>
+                                <span class="theme-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="settings-option">
+                            <div class="settings-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="settings-content">
+                                <div class="settings-title">Sincronização Automática</div>
+                                <div class="settings-desc">Envie dados automaticamente para a nuvem</div>
+                            </div>
+                            <label class="theme-switch">
+                                <input type="checkbox" id="auto-sync-toggle">
+                                <span class="theme-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title"><i class="fas fa-shield-alt"></i> Segurança</div>
+                        
+                        <button class="btn btn-secondary" id="change-password-btn">
+                            <i class="fas fa-key"></i> Alterar Senha
+                        </button>
+                        
+                        <button class="btn btn-secondary" id="privacy-btn">
+                            <i class="fas fa-user-shield"></i> Política de Privacidade
+                        </button>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title"><i class="fas fa-info-circle"></i> Sobre</div>
+                        
+                        <div class="artifact-card">
+                            <div class="artifact-name">ArcheoCatalog v1.0</div>
+                            <div class="artifact-details">Sistema oficial do IPHAN para catalogação de artefatos arqueológicos</div>
+                        </div>
+                        
+                        <button class="btn btn-danger" id="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Sair da Conta
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sync-status">
+                <i class="fas fa-wifi"></i> Modo offline - <span id="pending-count">5</span> fichas pendentes de sincronização
+            </div>
+            
+            <div class="bottom-nav">
+                <div class="nav-item active" data-tab="scanner">
+                    <i class="fas fa-qrcode"></i>
+                    <span>Scanner</span>
+                </div>
+                <div class="nav-item" data-tab="catalog">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Catalogar</span>
+                </div>
+                <div class="nav-item" data-tab="artifacts">
+                    <i class="fas fa-archive"></i>
+                    <span>Artefatos</span>
+                </div>
+                <div class="nav-item" data-tab="profile">
+                    <i class="fas fa-user"></i>
+                    <span>Perfil</span>
+                </div>
+            </div>
+            
+            <!-- Toast Notification -->
+            <div class="toast" id="toast"></div>
+        </div>
+    </div>
+
+    <script>
+        // Dados da aplicação
+        const appData = {
+            currentUser: null,
+            isLoggedIn: false,
+            currentArtifact: null,
+            artifacts: [
+                {
+                    id: 1,
+                    name: "Vaso Cerâmico Tupi",
+                    code: "AC-2023-0012",
+                    site: "Pedra Branca",
+                    material: "ceramica",
+                    description: "Vaso de cerâmica com padrões geométricos típicos da cultura Tupi",
+                    status: "pending",
+                    photos: []
+                },
+                {
+                    id: 2,
+                    name: "Lâmina de Pedra",
+                    code: "AC-2023-0008",
+                    site: "Serra Negra",
+                    material: "pedra",
+                    description: "Lâmina afiada de pedra provavelmente utilizada para corte",
+                    status: "synced",
+                    photos: []
+                },
+                {
+                    id: 3,
+                    name: "Ponta de Flecha",
+                    code: "AC-2023-0015",
+                    site: "Vale das Pedras",
+                    material: "pedra",
+                    description: "Ponta de flecha em quartzito com base côncava",
+                    status: "pending",
+                    photos: []
+                },
+                {
+                    id: 4,
+                    name: "Conta de Colar",
+                    code: "AC-2023-0005",
+                    site: "Serra Azul",
+                    material: "osso",
+                    description: "Conta de colar feita de osso animal com perfuração central",
+                    status: "synced",
+                    photos: []
+                }
+            ],
+            pendingSync: 5,
+            currentTheme: 'light'
+        };
+
+        // Elementos DOM
+        const authScreen = document.getElementById('auth-screen');
+        const appContent = document.getElementById('app-content');
+        const authTabs = document.querySelectorAll('.auth-tab');
+        const authContents = document.querySelectorAll('.auth-content');
+        const goToRegister = document.getElementById('go-to-register');
+        const goToLogin = document.getElementById('go-to-login');
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        
+        // Elementos do app principal
+        const navItems = document.querySelectorAll('.nav-item');
+        const tabContents = document.querySelectorAll('.content > div');
+        const backButton = document.getElementById('back-button');
+        const scanBtn = document.getElementById('scan-btn');
+        const saveBtn = document.getElementById('save-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const toast = document.getElementById('toast');
+        const pendingCount = document.getElementById('pending-count');
+        const currentScreenTitle = document.getElementById('current-screen-title');
+        
+        // Elementos do perfil
+        const profileCompanyName = document.getElementById('profile-company-name');
+        const profileCompanyEmail = document.getElementById('profile-company-email');
+        const artifactsCount = document.getElementById('artifacts-count');
+        const sitesCount = document.getElementById('sites-count');
+        const syncCount = document.getElementById('sync-count');
+        const themeToggle = document.getElementById('theme-toggle');
+        const notificationsToggle = document.getElementById('notifications-toggle');
+        const autoSyncToggle = document.getElementById('auto-sync-toggle');
+        const changePasswordBtn = document.getElementById('change-password-btn');
+        const privacyBtn = document.getElementById('privacy-btn');
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar se já existe um usuário logado
+            checkLoginStatus();
+            
+            // Carregar configurações salvas
+            loadSavedSettings();
+            
+            // Atualizar hora
+            updateTime();
+            setInterval(updateTime, 60000);
+            
+            // Carregar dados salvos
+            loadSavedData();
+            
+            // Configurar event listeners
+            setupEventListeners();
+            
+            // Atualizar informações do perfil
+            updateProfileInfo();
+        });
+
+        function checkLoginStatus() {
+            // Verificar se há um usuário logado no localStorage
+            try {
+                const userData = localStorage.getItem('archeocatalog_user');
+                if (userData) {
+                    const user = JSON.parse(userData);
+                    appData.currentUser = user;
+                    appData.isLoggedIn = true;
+                    showApp();
+                }
+            } catch (e) {
+                console.error('Erro ao verificar status de login:', e);
+            }
+        }
+
+        function loadSavedSettings() {
+            // Carregar configurações do localStorage
+            try {
+                const settings = localStorage.getItem('archeocatalog_settings');
+                if (settings) {
+                    const data = JSON.parse(settings);
+                    appData.currentTheme = data.theme || 'light';
+                    
+                    // Aplicar tema salvo
+                    if (appData.currentTheme === 'dark') {
+                        document.body.classList.add('dark-theme');
+                        themeToggle.checked = true;
+                    }
+                    
+                    // Aplicar outras configurações
+                    if (data.notifications !== undefined) {
+                        notificationsToggle.checked = data.notifications;
+                    }
+                    
+                    if (data.autoSync !== undefined) {
+                        autoSyncToggle.checked = data.autoSync;
+                    }
+                }
+            } catch (e) {
+                console.error('Erro ao carregar configurações:', e);
+            }
+        }
+
+        function saveSettings() {
+            // Salvar configurações no localStorage
+            try {
+                localStorage.setItem('archeocatalog_settings', JSON.stringify({
+                    theme: appData.currentTheme,
+                    notifications: notificationsToggle.checked,
+                    autoSync: autoSyncToggle.checked
+                }));
+            } catch (e) {
+                console.error('Erro ao salvar configurações:', e);
+            }
+        }
+
+        function showApp() {
+            if (authScreen && appContent) {
+                authScreen.style.display = 'none';
+                appContent.style.display = 'block';
+                // Garantir que a tela do scanner está ativa
+                showScreen('scanner');
+                // Ativar o item do scanner na barra inferior
+                navItems.forEach(nav => nav.classList.remove('active'));
+                const scannerNav = document.querySelector('[data-tab="scanner"]');
+                if (scannerNav) {
+                    scannerNav.classList.add('active');
+                }
+            }
+        }
+
+        function showAuth() {
+            if (authScreen && appContent) {
+                authScreen.style.display = 'flex';
+                appContent.style.display = 'none';
+            }
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+            const currentTimeElement = document.getElementById('current-time');
+            if (currentTimeElement) {
+                currentTimeElement.textContent = timeStr;
+            }
+        }
+
+        function loadSavedData() {
+            // Carregar dados do localStorage se disponível
+            try {
+                const savedData = localStorage.getItem('archeocatalog_data');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    appData.pendingSync = data.pendingSync || 5;
+                }
+            } catch (e) {
+                console.error('Erro ao carregar dados salvos:', e);
+            }
+            if (pendingCount) {
+                pendingCount.textContent = appData.pendingSync;
+            }
+        }
+
+        function saveData() {
+            // Salvar dados no localStorage
+            try {
+                localStorage.setItem('archeocatalog_data', JSON.stringify({
+                    pendingSync: appData.pendingSync
+                }));
+            } catch (e) {
+                console.error('Erro ao salvar dados:', e);
+            }
+        }
+
+        function updateProfileInfo() {
+            if (appData.currentUser) {
+                if (profileCompanyName) {
+                    profileCompanyName.textContent = appData.currentUser.company;
+                }
+                if (profileCompanyEmail) {
+                    profileCompanyEmail.textContent = appData.currentUser.email;
+                }
+                
+                // Atualizar estatísticas
+                if (artifactsCount) {
+                    artifactsCount.textContent = appData.artifacts.length;
+                }
+                if (sitesCount) {
+                    sitesCount.textContent = new Set(appData.artifacts.map(a => a.site)).size;
+                }
+                if (syncCount) {
+                    syncCount.textContent = appData.pendingSync;
+                }
+            }
+        }
+
+        function toggleTheme() {
+            if (appData.currentTheme === 'light') {
+                document.body.classList.add('dark-theme');
+                appData.currentTheme = 'dark';
+            } else {
+                document.body.classList.remove('dark-theme');
+                appData.currentTheme = 'light';
+            }
+            saveSettings();
+        }
+
+        function showScreen(screenId) {
+            // Esconder todas as telas
+            tabContents.forEach(content => {
+                if (content) {
+                    content.classList.add('hidden');
+                }
+            });
+            
+            // Mostrar a tela selecionada
+            const screenElement = document.getElementById(`${screenId}-tab`);
+            if (screenElement) {
+                screenElement.classList.remove('hidden');
+            }
+            
+            // Atualizar o título da tela
+            const screenTitles = {
+                'scanner': 'Scanner',
+                'catalog': 'Catalogar',
+                'artifacts': 'Artefatos',
+                'profile': 'Perfil'
+            };
+            if (currentScreenTitle) {
+                currentScreenTitle.textContent = screenTitles[screenId] || 'ArcheoCatalog';
+            }
+            
+            // Atualizar informações do perfil se for a tela de perfil
+            if (screenId === 'profile') {
+                updateProfileInfo();
+            }
+        }
+
+        function setupEventListeners() {
+            // Navegação entre login e registro
+            authTabs.forEach(tab => {
+                if (tab) {
+                    tab.addEventListener('click', () => {
+                        const tabId = tab.getAttribute('data-tab');
+                        
+                        // Ativar aba clicada
+                        authTabs.forEach(t => {
+                            if (t) t.classList.remove('active');
+                        });
+                        tab.classList.add('active');
+                        
+                        // Mostrar conteúdo correspondente
+                        authContents.forEach(content => {
+                            if (content) content.classList.remove('active');
+                        });
+                        const contentElement = document.getElementById(`${tabId}-content`);
+                        if (contentElement) {
+                            contentElement.classList.add('active');
+                        }
+                    });
+                }
+            });
+
+            // Links para alternar entre login e registro
+            if (goToRegister) {
+                goToRegister.addEventListener('click', () => {
+                    const registerTab = document.querySelector('[data-tab="register"]');
+                    if (registerTab) {
+                        registerTab.click();
+                    }
+                });
+            }
+
+            if (goToLogin) {
+                goToLogin.addEventListener('click', () => {
+                    const loginTab = document.querySelector('[data-tab="login"]');
+                    if (loginTab) {
+                        loginTab.click();
+                    }
+                });
+            }
+
+            // Botão de login
+            if (loginBtn) {
+                loginBtn.addEventListener('click', () => {
+                    const email = document.getElementById('login-email');
+                    const password = document.getElementById('login-password');
+                    
+                    if (!email || !password || !email.value || !password.value) {
+                        showToast('Preencha todos os campos', 'error');
+                        return;
+                    }
+                    
+                    // Simular processo de login
+                    loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
+                    loginBtn.disabled = true;
+                    
+                    setTimeout(() => {
+                        // Em um sistema real, aqui seria feita a validação com o backend
+                        if (email.value.includes('@') && password.value.length >= 6) {
+                            // Login bem-sucedido
+                            const user = {
+                                email: email.value,
+                                company: email.value.split('@')[0] + ' Arqueologia',
+                                loginTime: new Date().toISOString()
+                            };
+                            
+                            appData.currentUser = user;
+                            appData.isLoggedIn = true;
+                            
+                            // Salvar dados do usuário
+                            try {
+                                localStorage.setItem('archeocatalog_user', JSON.stringify(user));
+                            } catch (e) {
+                                console.error('Erro ao salvar usuário:', e);
+                            }
+                            
+                            showApp();
+                            updateProfileInfo();
+                            showToast(`Bem-vindo, ${user.company}!`);
+                        } else {
+                            // Login falhou
+                            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar no Sistema';
+                            loginBtn.disabled = false;
+                            showToast('E-mail ou senha inválidos', 'error');
+                        }
+                    }, 1500);
+                });
+            }
+
+            // Botão de registro
+            if (registerBtn) {
+                registerBtn.addEventListener('click', () => {
+                    const company = document.getElementById('register-company');
+                    const cnpj = document.getElementById('register-cnpj');
+                    const email = document.getElementById('register-email');
+                    const password = document.getElementById('register-password');
+                    const confirm = document.getElementById('register-confirm');
+                    
+                    if (!company || !cnpj || !email || !password || !confirm || 
+                        !company.value || !cnpj.value || !email.value || !password.value || !confirm.value) {
+                        showToast('Preencha todos os campos', 'error');
+                        return;
+                    }
+                    
+                    if (password.value !== confirm.value) {
+                        showToast('As senhas não coincidem', 'error');
+                        return;
+                    }
+                    
+                    if (password.value.length < 8) {
+                        showToast('A senha deve ter pelo menos 8 caracteres', 'error');
+                        return;
+                    }
+                    
+                    // Simular processo de registro
+                    registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando...';
+                    registerBtn.disabled = true;
+                    
+                    setTimeout(() => {
+                        // Em um sistema real, aqui seria feita a criação da conta no backend
+                        const user = {
+                            email: email.value,
+                            company: company.value,
+                            cnpj: cnpj.value,
+                            registrationDate: new Date().toISOString()
+                        };
+                        
+                        appData.currentUser = user;
+                        appData.isLoggedIn = true;
+                        
+                        // Salvar dados do usuário
+                        try {
+                            localStorage.setItem('archeocatalog_user', JSON.stringify(user));
+                        } catch (e) {
+                            console.error('Erro ao salvar usuário:', e);
+                        }
+                        
+                        showApp();
+                        updateProfileInfo();
+                        showToast(`Empresa ${company.value} registrada com sucesso!`);
+                    }, 2000);
+                });
+            }
+
+            // Navegação pela barra inferior
+            navItems.forEach(nav => {
+                if (nav) {
+                    nav.addEventListener('click', () => {
+                        const tabId = nav.getAttribute('data-tab');
+                        
+                        // Ativar item clicado
+                        navItems.forEach(n => {
+                            if (n) n.classList.remove('active');
+                        });
+                        nav.classList.add('active');
+                        
+                        // Mostrar tela correspondente
+                        showScreen(tabId);
+                    });
+                }
+            });
+
+            // Botão voltar
+            if (backButton) {
+                backButton.addEventListener('click', () => {
+                    // Voltar para a tela inicial
+                    const scannerNav = document.querySelector('[data-tab="scanner"]');
+                    if (scannerNav) {
+                        scannerNav.click();
+                    }
+                    showToast('Voltando para o início');
+                });
+            }
+
+            // Botão escanear
+            if (scanBtn) {
+                scanBtn.addEventListener('click', function() {
+                    this.innerHTML = '<i class="fas fa-search"></i> Escaneando...';
+                    this.classList.add('pulse');
+                    
+                    // Simular processo de escaneamento
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fas fa-camera"></i> Ativar Câmera';
+                        this.classList.remove('pulse');
+                        
+                        // Mudar para a tela de catalogação
+                        const catalogNav = document.querySelector('[data-tab="catalog"]');
+                        if (catalogNav) {
+                            catalogNav.click();
+                        }
+                        
+                        // Simular dados do QR Code
+                        const artifact = appData.artifacts[0];
+                        const artifactName = document.getElementById('artifact-name');
+                        const artifactCode = document.getElementById('artifact-code');
+                        const artifactSite = document.getElementById('artifact-site');
+                        const artifactMaterial = document.getElementById('artifact-material');
+                        const artifactDesc = document.getElementById('artifact-desc');
+                        
+                        if (artifactName) artifactName.value = artifact.name;
+                        if (artifactCode) artifactCode.value = artifact.code;
+                        if (artifactSite) artifactSite.value = artifact.site;
+                        if (artifactMaterial) artifactMaterial.value = artifact.material;
+                        if (artifactDesc) artifactDesc.value = artifact.description;
+                        
+                        appData.currentArtifact = artifact;
+                        
+                        showToast('QR Code lido com sucesso!');
+                    }, 2000);
+                });
+            }
+
+            // Botão salvar
+            if (saveBtn) {
+                saveBtn.addEventListener('click', () => {
+                    // Validar formulário
+                    const name = document.getElementById('artifact-name');
+                    const site = document.getElementById('artifact-site');
+                    
+                    if (!name || !site || !name.value || !site.value) {
+                        showToast('Preencha os campos obrigatórios', 'error');
+                        return;
+                    }
+                    
+                    // Simular salvamento
+                    saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+                    saveBtn.disabled = true;
+                    
+                    setTimeout(() => {
+                        saveBtn.innerHTML = '<i class="fas fa-save"></i> Salvar Ficha';
+                        saveBtn.disabled = false;
+                        showToast('Ficha salva com sucesso!');
+                        
+                        // Atualizar contador de sincronização
+                        appData.pendingSync++;
+                        if (pendingCount) {
+                            pendingCount.textContent = appData.pendingSync;
+                        }
+                        saveData();
+                        
+                        // Atualizar estatísticas no perfil
+                        updateProfileInfo();
+                    }, 1500);
+                });
+            }
+
+            // Botão de logout
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    if (confirm('Tem certeza que deseja sair da sua conta?')) {
+                        // Limpar dados do usuário
+                        appData.currentUser = null;
+                        appData.isLoggedIn = false;
+                        try {
+                            localStorage.removeItem('archeocatalog_user');
+                        } catch (e) {
+                            console.error('Erro ao remover usuário:', e);
+                        }
+                        
+                        showAuth();
+                        showToast('Você saiu da sua conta');
+                    }
+                });
+            }
+
+            // Alternador de tema
+            if (themeToggle) {
+                themeToggle.addEventListener('change', () => {
+                    toggleTheme();
+                    showToast(`Tema ${appData.currentTheme === 'dark' ? 'escuro' : 'claro'} ativado`);
+                });
+            }
+
+            // Alternador de notificações
+            if (notificationsToggle) {
+                notificationsToggle.addEventListener('change', () => {
+                    saveSettings();
+                    showToast(`Notificações ${notificationsToggle.checked ? 'ativadas' : 'desativadas'}`);
+                });
+            }
+
+            // Alternador de sincronização automática
+            if (autoSyncToggle) {
+                autoSyncToggle.addEventListener('change', () => {
+                    saveSettings();
+                    showToast(`Sincronização automática ${autoSyncToggle.checked ? 'ativada' : 'desativada'}`);
+                });
+            }
+
+            // Botão alterar senha
+            if (changePasswordBtn) {
+                changePasswordBtn.addEventListener('click', () => {
+                    showToast('Redirecionando para alteração de senha...');
+                    // Em um app real, isso abriria um formulário para alterar senha
+                });
+            }
+
+            // Botão política de privacidade
+            if (privacyBtn) {
+                privacyBtn.addEventListener('click', () => {
+                    showToast('Abrindo política de privacidade...');
+                    // Em um app real, isso abriria a política de privacidade
+                });
+            }
+
+            // Selecionar artefato recente
+            document.querySelectorAll('.artifact-card').forEach(card => {
+                if (card) {
+                    card.addEventListener('click', () => {
+                        const artifactId = card.getAttribute('data-artifact');
+                        const artifact = appData.artifacts.find(a => a.id == artifactId);
+                        
+                        if (artifact) {
+                            // Mudar para a tela de catalogação
+                            const catalogNav = document.querySelector('[data-tab="catalog"]');
+                            if (catalogNav) {
+                                catalogNav.click();
+                            }
+                            
+                            const artifactName = document.getElementById('artifact-name');
+                            const artifactCode = document.getElementById('artifact-code');
+                            const artifactSite = document.getElementById('artifact-site');
+                            const artifactMaterial = document.getElementById('artifact-material');
+                            const artifactDesc = document.getElementById('artifact-desc');
+                            
+                            if (artifactName) artifactName.value = artifact.name;
+                            if (artifactCode) artifactCode.value = artifact.code;
+                            if (artifactSite) artifactSite.value = artifact.site;
+                            if (artifactMaterial) artifactMaterial.value = artifact.material;
+                            if (artifactDesc) artifactDesc.value = artifact.description;
+                            
+                            appData.currentArtifact = artifact;
+                            
+                            showToast('Artefato carregado: ' + artifact.name);
+                        }
+                    });
+                }
+            });
+        }
+
+        function showToast(message, type = 'success') {
+            if (!toast) return;
+            
+            toast.textContent = message;
+            toast.className = 'toast show';
+            if (type === 'error') {
+                toast.style.background = 'var(--danger)';
+            } else {
+                toast.style.background = 'var(--dark)';
+            }
+            
+            setTimeout(() => {
+                toast.className = 'toast';
+            }, 3000);
+        }
+    </script>
+    
+    <!-- Script do Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</body>
+</html>
