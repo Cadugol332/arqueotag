@@ -829,6 +829,31 @@
             margin-bottom: 0;
         }
         
+        /* Instruções de permissão */
+        .permission-instructions {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid var(--warning);
+        }
+        
+        .permission-instructions h4 {
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .permission-instructions ol {
+            padding-left: 20px;
+            color: var(--secondary);
+        }
+        
+        .permission-instructions li {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
         /* Scrollbar personalizada */
         ::-webkit-scrollbar {
             width: 8px;
@@ -961,6 +986,17 @@
                         </div>
                         <button class="btn btn-primary" id="scan-btn"><i class="fas fa-camera"></i> Ativar Câmera</button>
                         <button class="btn btn-secondary" id="stop-camera-btn" style="display: none;"><i class="fas fa-stop"></i> Parar Câmera</button>
+                        
+                        <!-- Instruções para habilitar a câmera -->
+                        <div class="permission-instructions" id="permission-instructions" style="display: none;">
+                            <h4><i class="fas fa-info-circle"></i> Como habilitar a câmera:</h4>
+                            <ol>
+                                <li>Toque no ícone de "i" ou "cadeado" na barra de endereços</li>
+                                <li>Procure por "Permissões de site" ou "Configurações do site"</li>
+                                <li>Habilite a permissão para "Câmera"</li>
+                                <li>Recarregue a página e tente novamente</li>
+                            </ol>
+                        </div>
                     </div>
                     
                     <div class="section">
@@ -1268,6 +1304,7 @@
         const canvasContext = canvas.getContext('2d');
         const cameraView = document.getElementById('camera-view');
         const cameraPlaceholder = document.querySelector('.camera-placeholder');
+        const permissionInstructions = document.getElementById('permission-instructions');
         
         // Elementos do perfil
         const profileCompanyName = document.getElementById('profile-company-name');
@@ -1290,6 +1327,7 @@
         let stream = null;
         let scanning = false;
         let scanAnimation = null;
+        let cameraPermissionRequested = false;
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
@@ -1311,7 +1349,22 @@
             
             // Atualizar informações do perfil
             updateProfileInfo();
+            
+            // Verificar se estamos em um ambiente WebView
+            detectWebViewEnvironment();
         });
+
+        // Detectar se estamos em um WebView
+        function detectWebViewEnvironment() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            const isWebView = /(kodular|webview|wv)/.test(userAgent);
+            
+            if (isWebView) {
+                console.log('Executando em WebView - ajustando comportamento da câmera');
+                // Em WebViews, podemos precisar de abordagens diferentes
+                appData.isWebView = true;
+            }
+        }
 
         // Funções da câmera
         function showPermissionModal() {
@@ -1322,23 +1375,64 @@
             permissionModal.classList.remove('show');
         }
 
+        function showPermissionInstructions() {
+            if (permissionInstructions) {
+                permissionInstructions.style.display = 'block';
+            }
+        }
+
+        function hidePermissionInstructions() {
+            if (permissionInstructions) {
+                permissionInstructions.style.display = 'none';
+            }
+        }
+
         async function startCamera() {
             try {
-                // Mostrar modal de permissão primeiro
-                showPermissionModal();
+                // Mostrar feedback visual de carregamento
+                scanBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Solicitando permissão...';
+                scanBtn.disabled = true;
                 
-                // Aguardar decisão do usuário
-                const userDecision = await new Promise((resolve) => {
-                    permissionAllow.onclick = () => resolve(true);
-                    permissionCancel.onclick = () => resolve(false);
-                });
+                // Verificar se já temos permissão
+                const permissions = await navigator.permissions.query({ name: 'camera' });
                 
-                hidePermissionModal();
-                
-                if (!userDecision) {
-                    showToast('Permissão de câmera negada', 'error');
+                if (permissions.state === 'granted') {
+                    // Permissão já concedida
+                    await initializeCamera();
                     return;
                 }
+                
+                // Mostrar modal de permissão para ambientes normais
+                if (!appData.isWebView) {
+                    showPermissionModal();
+                    
+                    // Aguardar decisão do usuário
+                    const userDecision = await new Promise((resolve) => {
+                        permissionAllow.onclick = () => resolve(true);
+                        permissionCancel.onclick = () => resolve(false);
+                    });
+                    
+                    hidePermissionModal();
+                    
+                    if (!userDecision) {
+                        resetScanButton();
+                        showToast('Permissão de câmera negada', 'error');
+                        return;
+                    }
+                }
+                
+                // Tentar inicializar a câmera
+                await initializeCamera();
+                
+            } catch (error) {
+                console.error('Erro ao solicitar permissão:', error);
+                handleCameraError(error);
+            }
+        }
+
+        async function initializeCamera() {
+            try {
+                scanBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Iniciando câmera...';
                 
                 // Solicitar acesso à câmera
                 stream = await navigator.mediaDevices.getUserMedia({ 
@@ -1360,26 +1454,44 @@
                 scanBtn.style.display = 'none';
                 stopCameraBtn.style.display = 'block';
                 
+                // Esconder instruções de permissão
+                hidePermissionInstructions();
+                
                 // Iniciar scanner
                 startScanner();
                 
                 showToast('Câmera ativada com sucesso!');
-            } catch (error) {
-                console.error('Erro ao acessar a câmera:', error);
                 
-                // Tratamento específico de erros de permissão
-                if (error.name === 'NotAllowedError') {
-                    showToast('Permissão de câmera negada. Verifique as configurações do navegador.', 'error');
-                } else if (error.name === 'NotFoundError') {
-                    showToast('Nenhuma câmera encontrada no dispositivo.', 'error');
-                } else if (error.name === 'NotSupportedError') {
-                    showToast('O navegador não suporta acesso à câmera.', 'error');
-                } else if (error.name === 'NotReadableError') {
-                    showToast('A câmera está sendo usada por outro aplicativo.', 'error');
-                } else {
-                    showToast('Erro ao acessar a câmera. Verifique as permissões.', 'error');
-                }
+            } catch (error) {
+                console.error('Erro ao inicializar câmera:', error);
+                handleCameraError(error);
             }
+        }
+
+        function handleCameraError(error) {
+            resetScanButton();
+            
+            // Tratamento específico de erros de permissão
+            if (error.name === 'NotAllowedError') {
+                showToast('Permissão de câmera negada. Verifique as configurações do navegador.', 'error');
+                showPermissionInstructions();
+            } else if (error.name === 'NotFoundError') {
+                showToast('Nenhuma câmera encontrada no dispositivo.', 'error');
+            } else if (error.name === 'NotSupportedError') {
+                showToast('O navegador não suporta acesso à câmera.', 'error');
+            } else if (error.name === 'NotReadableError') {
+                showToast('A câmera está sendo usada por outro aplicativo.', 'error');
+            } else if (error.name === 'OverconstrainedError') {
+                showToast('Não foi possível atender às restrições da câmera solicitada.', 'error');
+            } else {
+                showToast('Erro ao acessar a câmera. Verifique as permissões.', 'error');
+                showPermissionInstructions();
+            }
+        }
+
+        function resetScanButton() {
+            scanBtn.innerHTML = '<i class="fas fa-camera"></i> Ativar Câmera';
+            scanBtn.disabled = false;
         }
 
         function stopCamera() {
@@ -1399,6 +1511,9 @@
             // Mostrar botão de ativar câmera
             scanBtn.style.display = 'block';
             stopCameraBtn.style.display = 'none';
+            
+            // Resetar o botão de scan
+            resetScanButton();
             
             showToast('Câmera desativada');
         }
