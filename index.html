@@ -1,337 +1,121 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Câmera - Permissão Play Store Style</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: Arial, sans-serif;
+            text-align: center;
             padding: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            margin: 0;
         }
-
         .container {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            color: white;
-            padding: 30px 20px;
-        }
-
-        .header h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .header .icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-
-        .content {
-            padding: 30px 20px;
-        }
-
-        .permission-card {
-            background: #f8f9fa;
+            padding: 30px;
             border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-            border-left: 4px solid #4CAF50;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 400px;
+            margin: 0 auto;
         }
-
-        .permission-card h3 {
-            color: #333;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .permission-card p {
-            color: #666;
-            font-size: 14px;
-            line-height: 1.4;
-        }
-
         .btn {
-            background: linear-gradient(135deg, #4CAF50, #45a049);
+            background: #4CAF50;
             color: white;
-            border: none;
             padding: 15px 30px;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 600;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 10px 5px;
-            min-width: 150px;
+            margin: 10px 0;
+            width: 100%;
+            transition: all 0.3s;
         }
-
         .btn:hover {
+            background: #45a049;
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
         }
-
-        .btn:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-        }
-
-        .btn-secondary:hover {
-            box-shadow: 0 10px 20px rgba(108, 117, 125, 0.3);
-        }
-
-        .camera-container {
+        #video {
             width: 100%;
             height: 300px;
-            background: #000;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 20px 0;
-            position: relative;
-        }
-
-        #videoElement {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .status {
-            padding: 15px;
+            background: black;
             border-radius: 10px;
             margin: 15px 0;
-            font-weight: 500;
         }
-
-        .status.granted {
+        .hidden {
+            display: none;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success {
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
-
-        .status.denied {
+        .error {
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
-
-        .status.prompt {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
-        }
-
-        .photo-result {
-            margin: 20px 0;
-        }
-
-        .photo-result img {
+        .photo {
             max-width: 100%;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .permission-steps {
-            text-align: left;
-            margin: 20px 0;
-            padding: 0 10px;
-        }
-
-        .permission-steps li {
             margin: 10px 0;
-            color: #555;
-            font-size: 14px;
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #4CAF50;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .camera-controls {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
+            border: 3px solid #4CAF50;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div class="icon">📷</div>
-            <h1>App Câmera</h1>
-            <p>Acesso à câmera do dispositivo</p>
+        <!-- Tela de Permissão -->
+        <div id="permissionScreen">
+            <h2>📷 Camera App</h2>
+            <p>We need camera access to take photos</p>
+            <button class="btn" onclick="requestCamera()">
+                ✅ ALLOW CAMERA ACCESS
+            </button>
+            <div id="status" class="status">
+                Click the button above to start
+            </div>
         </div>
 
-        <div class="content">
-            <!-- Seção de Permissão -->
-            <div id="permissionSection">
-                <div class="permission-card">
-                    <h3>🔒 Permissão Necessária</h3>
-                    <p>Este app precisa de acesso à sua câmera para tirar fotos e usar recursos de realidade aumentada.</p>
-                </div>
-
-                <div class="status prompt" id="statusMessage">
-                    🔄 Clique em "Conceder Permissão" para acessar a câmera
-                </div>
-
-                <button class="btn" id="requestPermissionBtn">
-                    <span id="btnText">📸 Conceder Permissão</span>
-                    <span class="loading hidden" id="btnLoading"></span>
-                </button>
-
-                <div class="permission-steps">
-                    <p><strong>Como funciona:</strong></p>
-                    <ul>
-                        <li>✅ Acesso apenas para tirar fotos dentro do app</li>
-                        <li>✅ Suas fotos não são compartilhadas</li>
-                        <li>✅ Permissão solicitada apenas uma vez</li>
-                        <li>✅ Pode ser revogada a qualquer momento</li>
-                    </ul>
-                </div>
+        <!-- Tela da Câmera -->
+        <div id="cameraScreen" class="hidden">
+            <h2>🎥 Camera Active</h2>
+            <video id="video" autoplay playsinline></video>
+            <div class="status success" id="cameraStatus">
+                ✅ Camera is working!
             </div>
-
-            <!-- Seção da Câmera (inicialmente escondida) -->
-            <div id="cameraSection" class="hidden">
-                <h3>🎥 Câmera Ativa</h3>
-                <div class="camera-container">
-                    <video id="videoElement" autoplay playsinline></video>
-                </div>
-                
-                <div class="status granted" id="cameraStatus">
-                    ✅ Câmera funcionando perfeitamente
-                </div>
-
-                <div class="camera-controls">
-                    <button class="btn" id="captureBtn">
-                        📸 Tirar Foto
-                    </button>
-                    <button class="btn btn-secondary" id="switchCameraBtn">
-                        🔄 Trocar Câmera
-                    </button>
-                    <button class="btn btn-secondary" id="stopCameraBtn">
-                        ⏹️ Parar Câmera
-                    </button>
-                </div>
-
-                <div class="photo-result" id="photoResult"></div>
-            </div>
+            <button class="btn" onclick="takePhoto()">
+                📸 TAKE PHOTO
+            </button>
+            <button class="btn" onclick="switchCamera()">
+                🔄 SWITCH CAMERA
+            </button>
+            <button class="btn" onclick="closeCamera()" 
+                    style="background: #ff4444;">
+                ❌ CLOSE CAMERA
+            </button>
+            <div id="photoResult"></div>
         </div>
     </div>
 
+    <canvas id="canvas" class="hidden"></canvas>
+
     <script>
-        // Elementos DOM
-        const permissionSection = document.getElementById('permissionSection');
-        const cameraSection = document.getElementById('cameraSection');
-        const statusMessage = document.getElementById('statusMessage');
-        const requestPermissionBtn = document.getElementById('requestPermissionBtn');
-        const btnText = document.getElementById('btnText');
-        const btnLoading = document.getElementById('btnLoading');
-        const videoElement = document.getElementById('videoElement');
-        const captureBtn = document.getElementById('captureBtn');
-        const switchCameraBtn = document.getElementById('switchCameraBtn');
-        const stopCameraBtn = document.getElementById('stopCameraBtn');
-        const cameraStatus = document.getElementById('cameraStatus');
-        const photoResult = document.getElementById('photoResult');
-
-        // Variáveis globais
         let stream = null;
-        let currentFacingMode = 'environment'; // 'environment' = traseira, 'user' = frontal
+        let currentFacingMode = 'environment';
 
-        // Verificar suporte para câmera
-        function checkCameraSupport() {
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                statusMessage.innerHTML = '❌ Seu navegador não suporta acesso à câmera';
-                statusMessage.className = 'status denied';
-                requestPermissionBtn.disabled = true;
-                return false;
-            }
-            return true;
-        }
-
-        // Verificar status da permissão automaticamente
-        async function checkPermissionStatus() {
-            if (!checkCameraSupport()) return;
+        async function requestCamera() {
+            document.getElementById('status').innerHTML = 
+                '🔄 Requesting camera permission...';
+            document.getElementById('status').className = 'status';
 
             try {
-                // Tenta acessar a câmera para verificar permissão
-                const testStream = await navigator.mediaDevices.getUserMedia({ video: true });
-                
-                // Se conseguiu acessar, permissão já foi concedida
-                testStream.getTracks().forEach(track => track.stop());
-                showCameraSection();
-                
-            } catch (error) {
-                // Permissão ainda não concedida ou negada
-                if (error.name === 'NotAllowedError') {
-                    statusMessage.innerHTML = '❌ Permissão de câmera negada anteriormente';
-                    statusMessage.className = 'status denied';
-                    requestPermissionBtn.disabled = false;
-                    btnText.textContent = '🔓 Solicitar Novamente';
-                } else {
-                    statusMessage.innerHTML = '📸 Clique para conceder acesso à câmera';
-                    statusMessage.className = 'status prompt';
-                    requestPermissionBtn.disabled = false;
-                }
-            }
-        }
-
-        // Solicitar permissão e abrir câmera
-        async function requestCameraPermission() {
-            if (!checkCameraSupport()) return;
-
-            try {
-                // Mostrar loading
-                btnText.textContent = 'Solicitando...';
-                btnLoading.classList.remove('hidden');
-                requestPermissionBtn.disabled = true;
-                statusMessage.innerHTML = '🔄 Solicitando permissão...';
-                statusMessage.className = 'status prompt';
-
-                // Solicitar acesso à câmera
                 stream = await navigator.mediaDevices.getUserMedia({ 
                     video: { 
                         facingMode: currentFacingMode,
@@ -339,171 +123,115 @@
                         height: { ideal: 720 }
                     } 
                 });
-
-                // Se chegou aqui, permissão foi concedida
-                showCameraSection();
-                startCamera();
+                
+                showCamera();
                 
             } catch (error) {
-                console.error('Erro ao solicitar permissão:', error);
-                
-                // Resetar botão
-                btnText.textContent = '📸 Conceder Permissão';
-                btnLoading.classList.add('hidden');
-                requestPermissionBtn.disabled = false;
-
+                let errorMessage = '❌ Error: ';
                 if (error.name === 'NotAllowedError') {
-                    statusMessage.innerHTML = '❌ Permissão negada. Clique no ícone de câmera na barra de endereço para permitir.';
-                    statusMessage.className = 'status denied';
+                    errorMessage += 'Permission denied!<br>Please allow camera access in your browser settings.';
                 } else if (error.name === 'NotFoundError') {
-                    statusMessage.innerHTML = '❌ Nenhuma câmera encontrada no dispositivo';
-                    statusMessage.className = 'status denied';
+                    errorMessage += 'No camera found.';
                 } else if (error.name === 'NotSupportedError') {
-                    statusMessage.innerHTML = '❌ Seu navegador não suporta esta funcionalidade';
-                    statusMessage.className = 'status denied';
+                    errorMessage += 'Browser not supported.';
                 } else {
-                    statusMessage.innerHTML = '❌ Erro ao acessar câmera: ' + error.message;
-                    statusMessage.className = 'status denied';
+                    errorMessage += error.message;
                 }
-            }
-        }
-
-        // Mostrar seção da câmera
-        function showCameraSection() {
-            permissionSection.classList.add('hidden');
-            cameraSection.classList.remove('hidden');
-            statusMessage.innerHTML = '✅ Permissão concedida!';
-            statusMessage.className = 'status granted';
-        }
-
-        // Mostrar seção de permissão
-        function showPermissionSection() {
-            cameraSection.classList.add('hidden');
-            permissionSection.classList.remove('hidden');
-        }
-
-        // Iniciar câmera
-        function startCamera() {
-            if (stream) {
-                videoElement.srcObject = stream;
-                cameraStatus.innerHTML = '✅ Câmera funcionando perfeitamente';
-                cameraStatus.className = 'status granted';
-            }
-        }
-
-        // Parar câmera
-        function stopCamera() {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-                stream = null;
-                videoElement.srcObject = null;
-            }
-            showPermissionSection();
-            btnText.textContent = '📸 Conceder Permissão';
-            statusMessage.innerHTML = '📸 Clique para conceder acesso à câmera';
-            statusMessage.className = 'status prompt';
-        }
-
-        // Trocar entre câmeras
-        async function switchCamera() {
-            try {
-                // Parar stream atual
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                }
-
-                // Alternar entre câmeras
-                currentFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
                 
-                // Obter nova stream
-                stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { 
-                        facingMode: currentFacingMode,
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    } 
-                });
-
-                // Atualizar vídeo
-                videoElement.srcObject = stream;
-                
-                cameraStatus.innerHTML = `✅ Câmera ${currentFacingMode === 'environment' ? 'traseira' : 'frontal'} ativa`;
-                
-            } catch (error) {
-                console.error('Erro ao trocar câmera:', error);
-                cameraStatus.innerHTML = '❌ Erro ao trocar de câmera';
-                cameraStatus.className = 'status denied';
+                document.getElementById('status').innerHTML = errorMessage;
+                document.getElementById('status').className = 'status error';
             }
         }
 
-        // Capturar foto
-        function capturePhoto() {
-            if (!videoElement || !stream) return;
+        function showCamera() {
+            document.getElementById('permissionScreen').classList.add('hidden');
+            document.getElementById('cameraScreen').classList.remove('hidden');
+            document.getElementById('video').srcObject = stream;
+            document.getElementById('status').innerHTML = '✅ Permission granted!';
+            document.getElementById('status').className = 'status success';
+        }
 
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
+        function takePhoto() {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
             
-            // Configurar canvas com dimensões do vídeo
-            canvas.width = videoElement.videoWidth;
-            canvas.height = videoElement.videoHeight;
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0);
             
-            // Desenhar frame atual no canvas
-            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+            const photoUrl = canvas.toDataURL('image/jpeg', 0.9);
             
-            // Converter para data URL
-            const photoDataUrl = canvas.toDataURL('image/jpeg', 0.8);
-            
-            // Exibir foto
-            photoResult.innerHTML = `
-                <h4>📸 Foto Capturada</h4>
-                <img src="${photoDataUrl}" alt="Foto capturada" />
-                <br><br>
-                <button class="btn" onclick="downloadPhoto('${photoDataUrl}')">💾 Baixar Foto</button>
-                <button class="btn btn-secondary" onclick="this.parentElement.innerHTML=''">🗑️ Fechar</button>
+            document.getElementById('photoResult').innerHTML = `
+                <h3>📸 Photo Taken!</h3>
+                <img src="${photoUrl}" class="photo">
+                <br>
+                <button class="btn" onclick="downloadPhoto('${photoUrl}')">
+                    💾 DOWNLOAD PHOTO
+                </button>
+                <button class="btn" onclick="clearPhoto()" 
+                        style="background: #666;">
+                    🗑️ CLEAR
+                </button>
             `;
         }
 
-        // Baixar foto
+        async function switchCamera() {
+            try {
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+                
+                currentFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
+                
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: currentFacingMode } 
+                });
+                
+                document.getElementById('video').srcObject = stream;
+                document.getElementById('cameraStatus').innerHTML = 
+                    `✅ ${currentFacingMode === 'environment' ? 'Back' : 'Front'} camera active`;
+                    
+            } catch (error) {
+                document.getElementById('cameraStatus').innerHTML = 
+                    '❌ Error switching camera';
+                document.getElementById('cameraStatus').className = 'status error';
+            }
+        }
+
+        function closeCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            document.getElementById('cameraScreen').classList.add('hidden');
+            document.getElementById('permissionScreen').classList.remove('hidden');
+            document.getElementById('photoResult').innerHTML = '';
+        }
+
         function downloadPhoto(dataUrl) {
             const link = document.createElement('a');
-            link.download = `foto-${new Date().toISOString().replace(/[:.]/g, '-')}.jpg`;
+            link.download = 'photo-' + new Date().getTime() + '.jpg';
             link.href = dataUrl;
             link.click();
         }
 
-        // Event Listeners
-        requestPermissionBtn.addEventListener('click', requestCameraPermission);
-        captureBtn.addEventListener('click', capturePhoto);
-        switchCameraBtn.addEventListener('click', switchCamera);
-        stopCameraBtn.addEventListener('click', stopCamera);
-
-        // Inicializar quando a página carregar
-        document.addEventListener('DOMContentLoaded', function() {
-            checkPermissionStatus();
-        });
-
-        // Parar câmera quando a página for fechada
-        window.addEventListener('beforeunload', function() {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-            }
-        });
-
-        // Detectar se a permissão é alterada durante o uso
-        if (navigator.permissions && navigator.permissions.query) {
-            navigator.permissions.query({ name: 'camera' }).then(function(permissionStatus) {
-                permissionStatus.onchange = function() {
-                    if (this.state === 'granted') {
-                        showCameraSection();
-                        requestCameraPermission();
-                    } else if (this.state === 'denied') {
-                        showPermissionSection();
-                        statusMessage.innerHTML = '❌ Permissão de câmera negada';
-                        statusMessage.className = 'status denied';
-                    }
-                };
-            });
+        function clearPhoto() {
+            document.getElementById('photoResult').innerHTML = '';
         }
+
+        // Check if already have permission when page loads
+        window.addEventListener('load', function() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(testStream) {
+                    testStream.getTracks().forEach(track => track.stop());
+                    document.getElementById('status').innerHTML = 
+                        '✅ Camera ready! Click to open.';
+                })
+                .catch(function() {
+                    // No permission yet - keep default message
+                });
+        });
     </script>
 </body>
 </html>
